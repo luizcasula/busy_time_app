@@ -11,6 +11,18 @@ class CustomSearchDelagate extends SearchDelegate<String>{
     );
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return theme.copyWith(
+      primaryColor: Colors.black,
+      primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
+      primaryColorBrightness: Brightness.dark,
+      primaryTextTheme: theme.textTheme,
+    );
+  }
+
+  
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
