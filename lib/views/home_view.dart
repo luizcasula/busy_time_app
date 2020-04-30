@@ -12,11 +12,13 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final HomeController _controller = HomeController();
   final ScrollController scrollController = ScrollController();
+  final HomeController _controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
+    //Orientation orientation = MediaQuery.of(context).orientation;
+
     return Scaffold(
       //appBar: AppBar(title: Text("Busy Time")),
       bottomNavigationBar: BottomAppBar(
@@ -40,16 +42,18 @@ class _HomeViewState extends State<HomeView> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add, color: Colors.white,),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
         backgroundColor: Colors.deepPurple,
         onPressed: () async {
-          String query = await showSearch(
+          _controller.query = await showSearch(
             context: context,
             delegate: CustomSearchDelagate(hintText: 'Series or Movies'),
           );
-          if (query != '') {
-            await _controller.getContent(query);
-          }
+
+          await _controller.getContent();
         },
       ),
       body: Container(
@@ -74,15 +78,22 @@ class _HomeViewState extends State<HomeView> {
                           ? Center(
                               child: Text("Nenhum"),
                             )
-                          : ListView.builder(
+                          : GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 0.7,
+                              ),
+                              //shrinkWrap: true,
                               itemCount: _controller.listContent.length,
                               itemBuilder: (context, index) {
                                 print(
                                     "item builder index: " + index.toString());
                                 ContentModel model =
                                     _controller.listContent[index];
-                                return ListTile(
-                                  title: Text(model.name),
+                                return Card(
+                                  child: SizedBox(
+                                      child: Image.network(model.posterPath)),
                                 );
                               },
                             )
