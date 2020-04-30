@@ -18,8 +18,8 @@ class ContentRepository{
     if(_response.statusCode == 200){
       print(_response.data);
       var name = _response.data["results"][0]["name"];
-
-     model = ContentModel(name: name);
+      var posterPath = "https://image.tmdb.org/t/p/original/" + _response.data["results"][0]["poster_path"];
+     model = ContentModel(name: name, posterPath: posterPath);
      print(model.name);
      return model;
     }else{
