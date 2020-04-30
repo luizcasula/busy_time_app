@@ -26,16 +26,34 @@ mixin _$HomeController on _HomeController, Store {
     }, _$statusAtom, name: '${_$statusAtom.name}_set');
   }
 
+  final _$listContentAtom = Atom(name: '_HomeController.listContent');
+
+  @override
+  ObservableList<ContentModel> get listContent {
+    _$listContentAtom.context.enforceReadPolicy(_$listContentAtom);
+    _$listContentAtom.reportObserved();
+    return super.listContent;
+  }
+
+  @override
+  set listContent(ObservableList<ContentModel> value) {
+    _$listContentAtom.context.conditionallyRunInAction(() {
+      super.listContent = value;
+      _$listContentAtom.reportChanged();
+    }, _$listContentAtom, name: '${_$listContentAtom.name}_set');
+  }
+
   final _$getContentAsyncAction = AsyncAction('getContent');
 
   @override
-  Future getContent(String query) {
-    return _$getContentAsyncAction.run(() => super.getContent(query));
+  Future getContent() {
+    return _$getContentAsyncAction.run(() => super.getContent());
   }
 
   @override
   String toString() {
-    final string = 'status: ${status.toString()}';
+    final string =
+        'status: ${status.toString()},listContent: ${listContent.toString()}';
     return '{$string}';
   }
 }
