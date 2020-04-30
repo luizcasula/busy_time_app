@@ -18,94 +18,105 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     //Orientation orientation = MediaQuery.of(context).orientation;
-
     return Scaffold(
-      //appBar: AppBar(title: Text("Busy Time")),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.menu),
-              color: Colors.white,
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              color: Colors.white,
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.deepPurple,
-        onPressed: () async {
-          _controller.query = await showSearch(
-            context: context,
-            delegate: CustomSearchDelagate(hintText: 'Series or Movies'),
-          );
-
-          await _controller.getContent();
-        },
-      ),
-      body: Container(
-        //color: Colors.grey,
-        //height: 520,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 56, 0, 16),
-              child: Text(
-                "Series",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
+        //appBar: AppBar(title: Text("Busy Time")),
+        bottomNavigationBar: BottomAppBar(
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.menu),
+                color: Colors.white,
+                onPressed: () {},
               ),
-            ),
-            Expanded(
-              child: Observer(
-                builder: (context) {
-                  return _controller.status
-                      ? _controller.listContent == []
-                          ? Center(
-                              child: Text("Nenhum"),
-                            )
-                          : GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 0.7,
-                              ),
-                              //shrinkWrap: true,
-                              itemCount: _controller.listContent.length,
-                              itemBuilder: (context, index) {
-                                print(
-                                    "item builder index: " + index.toString());
-                                ContentModel model =
-                                    _controller.listContent[index];
-                                return Card(
-                                  child: SizedBox(
-                                      child: Image.network(model.posterPath)),
-                                );
-                              },
-                            )
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        );
-                },
+              IconButton(
+                icon: Icon(Icons.search),
+                color: Colors.white,
+                onPressed: () {},
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.deepPurple,
+          onPressed: () async {
+            _controller.query = await showSearch(
+              context: context,
+              delegate: CustomSearchDelagate(hintText: 'Search a Serie'),
+            );
+            await _controller.getContent();
+          },
+        ),
+        body: Observer(builder: (_) {
+          return _controller.status
+              ? _controller.listContent.isEmpty
+                  ? Center(
+                      child: Text(
+                        "Add your watched series",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w200),
+                      ),
+                    )
+                  : CustomScrollView(
+                      slivers: <Widget>[
+                        SliverAppBar(
+                          expandedHeight: 200.0,
+                          floating: false,
+                          pinned: true,
+                          title: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.only(top: 32),
+                            child: Column(
+                              children: <Widget>[
+                                //Text("BUSY TIME"),
+                                Text(
+                                  "Series",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w900),
+                                ),
+                              ],
+                            ),
+                          ),
+                          flexibleSpace: FlexibleSpaceBar(),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                          ),
+                        ),
+                        SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.7,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              print("item builder index: " + index.toString());
+                              ContentModel model =
+                                  _controller.listContent[index];
+                              return Card(
+                                child: SizedBox(
+                                  child: Image.network(model.posterPath),
+                                ),
+                              );
+                            },
+                            childCount: _controller.listContent.length,
+                          ),
+                        ),
+                      ],
+                    )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        }));
   }
 }
