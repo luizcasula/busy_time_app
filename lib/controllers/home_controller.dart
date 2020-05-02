@@ -1,6 +1,5 @@
 import 'package:busy_time/models/serie_model.dart';
 import 'package:busy_time/repositories/serie_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 part 'home_controller.g.dart';
 
@@ -8,6 +7,7 @@ class HomeController = _HomeController with _$HomeController;
 
 abstract class _HomeController with Store {
   SerieRepository _repository;
+  SerieModel model;
 
   _HomeController() {
     _repository = SerieRepository();
@@ -21,21 +21,25 @@ abstract class _HomeController with Store {
   String timeWatched = "00:00:00";
 
   @observable
-  bool status = true;
+  bool showGrid = true;
+
+  @observable
+  int seasonNumbers = 0;
+
+  @observable
+  int indexSeason = -1;
 
   @observable
   ObservableList<SerieModel> listContent = ObservableList();
 
   @action
-  getContent() async {
+  getSerie() async {
     if (query != '') {
-      status = false;
-      SerieModel model = await _repository.getSerie(query);
-      if (model != null) {
-        listContent.add(model);
-        _updateTimeWatched(model.episodeRunTime);
+      var id = await _repository.getIdSerie(query);
+      model = await _repository.getSerie(id);
+      if (model.id != null) {
+        seasonNumbers = model.numberSeasons;
       }
-      status = true;
     }
   }
 
@@ -47,5 +51,34 @@ abstract class _HomeController with Store {
         d.inHours.remainder(24).toString().padLeft(2, '0') +
         ":" +
         d.inMinutes.remainder(60).toString().padLeft(2, '0');
+  }
+
+  @action
+  _calculateTotalTime() {
+    int time;
+    int episodes = 0;
+    if (indexSeason != -1) {
+      print("indexSeason CalculateTotalTime: " + indexSeason.toString());
+      for (int i = 0; i < indexSeason + 1; i++) {
+        episodes += model.episodesForSeason[i];
+        print("Episodes: " + episodes.toString());
+      }
+      print("model.episodeRunTime: " + model.episodeRunTime.toString());
+      time = episodes * model.episodeRunTime;
+    }
+    return time;
+  }
+
+  @action
+  showSerie() {
+    showGrid = false;
+    if (model != null) {
+      int time = _calculateTotalTime();
+      if (time != null) {
+        listContent.add(model);
+        _updateTimeWatched(time);
+      }
+    }
+    showGrid = true;
   }
 }

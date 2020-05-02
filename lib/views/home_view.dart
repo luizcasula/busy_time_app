@@ -1,6 +1,7 @@
 import 'package:busy_time/components/custom_search_delagate.dart';
 import 'package:busy_time/controllers/home_controller.dart';
 import 'package:busy_time/models/serie_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -19,7 +20,6 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     //Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-        //appBar: AppBar(title: Text("Busy Time")),
         bottomNavigationBar: BottomAppBar(
           shape: CircularNotchedRectangle(),
           child: Row(
@@ -51,11 +51,64 @@ class _HomeViewState extends State<HomeView> {
               context: context,
               delegate: CustomSearchDelagate(hintText: 'Search a Serie'),
             );
-            await _controller.getContent();
+            //TODO: add computed in controller to show dialog
+            await _controller.getSerie();
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(_controller.query,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w700,
+                            )),
+                        Container(
+                          height: 300,
+                          width: 300,
+                          child: CupertinoPicker.builder(
+                            backgroundColor: Colors.black.withOpacity(0),
+                            itemExtent: 50,
+                            childCount: _controller.seasonNumbers,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                (index + 1).toString(),
+                                style: TextStyle(color: Colors.white),
+                              );
+                            },
+                            onSelectedItemChanged: (index) {
+                              
+                              _controller.indexSeason = index;
+                              print(
+                                  "indexSeason: " + index.toString());
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    elevation: 5,
+                    backgroundColor: Colors.black45,
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          _controller.showSerie();
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "OK",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
+                });
           },
         ),
         body: Observer(builder: (_) {
-          return _controller.status
+          return _controller.showGrid
               ? _controller.listContent.isEmpty
                   ? Center(
                       child: Text(
@@ -98,11 +151,11 @@ class _HomeViewState extends State<HomeView> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
                               print("item builder index: " + index.toString());
-                              SerieModel model =
-                                  _controller.listContent[index];
+                              SerieModel model = _controller.listContent[index];
                               return Stack(
                                 children: <Widget>[
                                   Card(
+                                    elevation: 10,
                                     child: SizedBox(
                                       child: Image.network(model.posterPath),
                                     ),

@@ -5,8 +5,7 @@ import 'package:dio/dio.dart';
 class SerieRepository {
   Dio dio = Dio();
 
-  Future<SerieModel> getSerie(String query) async {
-    SerieModel model;
+  Future<int> getIdSerie(String query) async {
     Response _response;
     var url =
         "https://api.themoviedb.org/3/search/tv?api_key=$API_KEY&query=${query.toLowerCase()}&page=1&include_adult=false";
@@ -16,30 +15,51 @@ class SerieRepository {
 
     if (_response.statusCode == 200) {
       print(_response.data);
-      var name = _response.data["results"][0]["name"];
+      return _response.data["results"][0]["id"];
+    } else {
+      return null;
+    }
+  }
+
+  Future<SerieModel> getSerie(int id) async {
+    Response _response;
+    SerieModel model;
+
+    var url = "https://api.themoviedb.org/3/tv/$id?api_key=$API_KEY";
+
+    _response = await dio.get(url);
+
+    if (_response.statusCode == 200) {
+      print(_response.data.toString());
+      var id = _response.data["id"];
+      var name = _response.data["name"];
+      var episodeRunTime = _response.data["episode_run_time"][0];
+      var numberSeasons = _response.data["number_of_seasons"];
       var posterPath = "https://image.tmdb.org/t/p/original/" +
-          _response.data["results"][0]["poster_path"];
-      var id = _response.data["results"][0]["id"];
+          _response.data["poster_path"];
+      print("episode_run_time: " + episodeRunTime.toString());
       
-      url = "https://api.themoviedb.org/3/tv/$id?api_key=$API_KEY";
-      _response = await dio.get(url);
+      List<int> episodesForSeason = [];
+
+      var seasons = _response.data["seasons"];
       
-      if (_response.statusCode == 200) {
-        print(_response.data.toString());
-        var episodeRunTime = _response.data["episode_run_time"][0];
-        print("episode_run_time: " + episodeRunTime.toString());
-
-        model = SerieModel(
-            id: id,
-            name: name,
-            posterPath: posterPath,
-            episodeRunTime: episodeRunTime);
-
-        print(model.name);
-        return model;
-      } else {
-        return null;
+      for(var season in seasons){
+        episodesForSeason.add(season["episode_count"]);
+        print(episodesForSeason.toString());
       }
+
+      model = SerieModel(
+        id: id,
+        name: name,
+        numberSeasons: numberSeasons,
+        episodeRunTime: episodeRunTime,
+        posterPath: posterPath,
+        episodesForSeason: episodesForSeason
+      );
+
+      print(model.name);
+
+      return model;
     } else {
       return null;
     }
