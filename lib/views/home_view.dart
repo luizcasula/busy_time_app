@@ -77,7 +77,9 @@ class _HomeViewState extends State<HomeView> {
                                   alignment: Alignment.center,
                                   child: Observer(builder: (_) {
                                     return Text(
-                                      "00:00:00",
+                                      _controller.timeWatched == null 
+                                      ? "00:00:00"
+                                      : _controller.timeWatched.toString(),
                                       style: TextStyle(fontSize: 40),
                                     );
                                   }),
@@ -103,7 +105,6 @@ class _HomeViewState extends State<HomeView> {
                               print("item builder index: " + index.toString());
                               SerieModel model =
                                   _controller.listContent[index];
-                              
                               return Stack(
                                 children: <Widget>[
                                   Card(

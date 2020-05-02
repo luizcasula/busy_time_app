@@ -17,6 +17,9 @@ abstract class _HomeController with Store {
   String query = "";
 
   @observable
+  int timeWatched = 0;
+
+  @observable
   bool status = true;
 
   @observable
@@ -27,11 +30,17 @@ abstract class _HomeController with Store {
   getContent() async {
     if (query != '') {
       status = false;
-      SerieModel model = await _repository.getContent(query);
+      SerieModel model = await _repository.getSerie(query);
       if (model != null) {
         listContent.add(model);
+        _updateTimeWatched(model.episodeRunTime);
       }
       status = true;
     }
+  }
+
+  @action
+  _updateTimeWatched(int time){
+    timeWatched += time;
   }
 }
