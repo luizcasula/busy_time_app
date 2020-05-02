@@ -13,6 +13,7 @@ class SerieModel {
   String _backdropPath;
   String _overview;
   List<String> _originCountry;
+  int _episodeRunTime;
 
   SerieModel(
       {String originalName,
@@ -28,7 +29,8 @@ class SerieModel {
       String originalLanguage,
       String backdropPath,
       String overview,
-      List<String> originCountry}) {
+      List<String> originCountry,
+      int episodeRunTime}) {
     this._originalName = originalName;
     this._id = id;
     this._mediaType = mediaType;
@@ -43,8 +45,10 @@ class SerieModel {
     this._backdropPath = backdropPath;
     this._overview = overview;
     this._originCountry = originCountry;
+    this._episodeRunTime = episodeRunTime;
   }
-
+  int get episodeRunTime => _episodeRunTime;
+  set episodeRunTime(int episodeRunTime) => _episodeRunTime;
   String get originalName => _originalName;
   set originalName(String originalName) => _originalName = originalName;
   int get id => _id;
@@ -91,6 +95,7 @@ class SerieModel {
     _backdropPath = json['backdrop_path'];
     _overview = json['overview'];
     _originCountry = json['origin_country'].cast<String>();
+    _episodeRunTime = json["episode_run_time"].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +114,7 @@ class SerieModel {
     data['backdrop_path'] = this._backdropPath;
     data['overview'] = this._overview;
     data['origin_country'] = this._originCountry;
+    data['episode_run_time'] = this.episodeRunTime;
     return data;
   }
 }
