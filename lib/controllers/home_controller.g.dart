@@ -29,14 +29,14 @@ mixin _$HomeController on _HomeController, Store {
   final _$listContentAtom = Atom(name: '_HomeController.listContent');
 
   @override
-  ObservableList<ContentModel> get listContent {
+  ObservableList<SerieModel> get listContent {
     _$listContentAtom.context.enforceReadPolicy(_$listContentAtom);
     _$listContentAtom.reportObserved();
     return super.listContent;
   }
 
   @override
-  set listContent(ObservableList<ContentModel> value) {
+  set listContent(ObservableList<SerieModel> value) {
     _$listContentAtom.context.conditionallyRunInAction(() {
       super.listContent = value;
       _$listContentAtom.reportChanged();

@@ -1,4 +1,4 @@
-class ContentModel {
+class SerieModel {
   String _originalName;
   int _id;
   String _mediaType;
@@ -14,7 +14,7 @@ class ContentModel {
   String _overview;
   List<String> _originCountry;
 
-  ContentModel(
+  SerieModel(
       {String originalName,
       int id,
       String mediaType,
@@ -76,7 +76,7 @@ class ContentModel {
   set originCountry(List<String> originCountry) =>
       _originCountry = originCountry;
 
-  ContentModel.fromJson(Map<String, dynamic> json) {
+  SerieModel.fromJson(Map<String, dynamic> json) {
     _originalName = json['original_name'];
     _id = json['id'];
     _mediaType = json['media_type'];
