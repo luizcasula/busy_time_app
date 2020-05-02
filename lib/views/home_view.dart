@@ -71,25 +71,20 @@ class _HomeViewState extends State<HomeView> {
                             padding:
                                 EdgeInsets.only(left: 16, top: 72, bottom: 32),
                             child: Column(
-                              //crossAxisAlignment: CrossAxisAlignment.stretch,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Observer(builder: (_) {
-                                    return Text(
-                                      _controller.timeWatched == null 
-                                      ? "00:00:00"
-                                      : _controller.timeWatched.toString(),
-                                      style: TextStyle(fontSize: 40),
-                                    );
-                                  }),
-                                ),
-                                /*Text(
-                                  "Series",
+                                Observer(builder: (_) {
+                                  return Text(
+                                    _controller.timeWatched,
+                                    style: TextStyle(fontSize: 48),
+                                  );
+                                }),
+                                Text(
+                                  "DAYS HOURS MINUTES",
                                   style: TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w900),
-                                ),*/
+                                    fontWeight: FontWeight.w200,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
