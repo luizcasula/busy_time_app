@@ -1,6 +1,6 @@
 import 'package:busy_time/components/custom_search_delagate.dart';
 import 'package:busy_time/controllers/home_controller.dart';
-import 'package:busy_time/models/content_model.dart';
+import 'package:busy_time/models/serie_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -66,30 +66,30 @@ class _HomeViewState extends State<HomeView> {
                     )
                   : CustomScrollView(
                       slivers: <Widget>[
-                        SliverAppBar(
-                          expandedHeight: 200.0,
-                          floating: false,
-                          pinned: true,
-                          title: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(top: 32),
+                        SliverToBoxAdapter(
+                          child: Container(
+                            padding:
+                                EdgeInsets.only(left: 16, top: 72, bottom: 32),
                             child: Column(
+                              //crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: <Widget>[
-                                //Text("BUSY TIME"),
-                                Text(
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Observer(builder: (_) {
+                                    return Text(
+                                      "00:00:00",
+                                      style: TextStyle(fontSize: 40),
+                                    );
+                                  }),
+                                ),
+                                /*Text(
                                   "Series",
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.w900),
-                                ),
+                                ),*/
                               ],
                             ),
-                          ),
-                          flexibleSpace: FlexibleSpaceBar(),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Container(
-                            padding: EdgeInsets.all(16),
                           ),
                         ),
                         SliverGrid(
@@ -101,12 +101,17 @@ class _HomeViewState extends State<HomeView> {
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
                               print("item builder index: " + index.toString());
-                              ContentModel model =
+                              SerieModel model =
                                   _controller.listContent[index];
-                              return Card(
-                                child: SizedBox(
-                                  child: Image.network(model.posterPath),
-                                ),
+                              
+                              return Stack(
+                                children: <Widget>[
+                                  Card(
+                                    child: SizedBox(
+                                      child: Image.network(model.posterPath),
+                                    ),
+                                  ),
+                                ],
                               );
                             },
                             childCount: _controller.listContent.length,
