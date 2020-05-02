@@ -1,6 +1,9 @@
-# busy_time
+# Busy Time
 
-A new Flutter project.
+## Screenshots
+
+![Screenshot_main](https://user-images.githubusercontent.com/44275402/80893917-8315f180-8ca4-11ea-95e9-049a1221e12c.png)
+
 
 ## Getting Started
 
