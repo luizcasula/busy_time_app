@@ -20,92 +20,95 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     //Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.menu),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Observer(builder: (_) {
+              return IconButton(
+                icon: Icon(Icons.delete),
                 color: Colors.white,
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.search),
-                color: Colors.white,
-                onPressed: () {},
-              ),
-            ],
-          ),
+                onPressed: _controller.changeRemoveStatus,
+              );
+            }),
+            IconButton(
+              icon: Icon(Icons.search),
+              color: Colors.white,
+              onPressed: () {},
+            ),
+          ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.deepPurple,
-          onPressed: () async {
-            _controller.query = await showSearch(
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.deepPurple,
+        onPressed: () async {
+          _controller.query = await showSearch(
+            context: context,
+            delegate: CustomSearchDelagate(hintText: 'Search a Serie'),
+          );
+          //TODO: add computed in controller to show dialog
+          await _controller.getSerie();
+          showDialog(
               context: context,
-              delegate: CustomSearchDelagate(hintText: 'Search a Serie'),
-            );
-            //TODO: add computed in controller to show dialog
-            await _controller.getSerie();
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(_controller.query,
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w700,
-                            )),
-                        Container(
-                          height: 300,
-                          width: 300,
-                          child: CupertinoPicker.builder(
-                            backgroundColor: Colors.black.withOpacity(0),
-                            itemExtent: 50,
-                            childCount: _controller.seasonNumbers,
-                            itemBuilder: (context, index) {
-                              return Text(
-                                (index + 1).toString(),
-                                style: TextStyle(color: Colors.white),
-                              );
-                            },
-                            onSelectedItemChanged: (index) {
-                              _controller.indexSeason = index;
-                              print("indexSeason: " + index.toString());
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    elevation: 5,
-                    backgroundColor: Colors.black45,
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          _controller.showSerie();
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "OK",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+              builder: (context) {
+                return AlertDialog(
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(_controller.query,
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w700,
+                          )),
+                      Container(
+                        height: 300,
+                        width: 300,
+                        child: CupertinoPicker.builder(
+                          backgroundColor: Colors.black.withOpacity(0),
+                          itemExtent: 50,
+                          childCount: _controller.seasonNumbers,
+                          itemBuilder: (context, index) {
+                            return Text(
+                              (index + 1).toString(),
+                              style: TextStyle(color: Colors.white),
+                            );
+                          },
+                          onSelectedItemChanged: (index) {
+                            _controller.indexSeason = index;
+                            print("indexSeason: " + index.toString());
+                          },
                         ),
                       ),
                     ],
-                  );
-                });
-          },
-        ),
-        body: Observer(builder: (_) {
+                  ),
+                  elevation: 5,
+                  backgroundColor: Colors.black45,
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        _controller.showSerie();
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "OK",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                );
+              });
+        },
+      ),
+      body: Observer(
+        builder: (_) {
           return _controller.showGrid
               ? _controller.listContent.isEmpty
                   ? Center(
@@ -155,10 +158,20 @@ class _HomeViewState extends State<HomeView> {
                                   children: <Widget>[
                                     Card(
                                       elevation: 10,
-                                      child: SizedBox(
-                                        child: Image.network(model.posterPath),
+                                      child: Opacity(
+                                        opacity: _controller.opacityCard,
+                                        child: Image.network(
+                                          model.posterPath,
+                                        ),
                                       ),
                                     ),
+                                    // DecoratedBox(
+                                    //     decoration: BoxDecoration(
+                                    //   color: Colors.black45,
+                                    // )),
+                                    // Card(
+                                    //     elevation: 10,
+                                    //     color: _controller.colorPoster),
                                     _controller.showRemoveButton
                                         ? Positioned(
                                             left: 73,
@@ -167,13 +180,10 @@ class _HomeViewState extends State<HomeView> {
                                                 Icons.remove_circle,
                                                 color: Colors.white,
                                               ),
-                                              onPressed: () =>
-                                                  _controller.removeSerie(index),
+                                              onPressed: () => _controller
+                                                  .removeSerie(index),
                                             ))
-                                        : GestureDetector(
-                                            onLongPress:
-                                                _controller.changeRemoveStatus,
-                                          ),
+                                        : Container()
                                   ],
                                 );
                               });
@@ -186,6 +196,8 @@ class _HomeViewState extends State<HomeView> {
               : Center(
                   child: CircularProgressIndicator(),
                 );
-        }));
+        },
+      ),
+    );
   }
 }

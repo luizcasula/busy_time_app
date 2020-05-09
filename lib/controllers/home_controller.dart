@@ -1,6 +1,5 @@
 import 'package:busy_time/models/serie_model.dart';
 import 'package:busy_time/repositories/serie_repository.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 part 'home_controller.g.dart';
 
@@ -94,4 +93,7 @@ abstract class _HomeController with Store {
 
   @computed
   bool get showRemoveButton => _removeButton;
+
+  @computed
+  double get opacityCard => _removeButton ? 0.4 : 1;
 }

@@ -15,6 +15,12 @@ mixin _$HomeController on _HomeController, Store {
   bool get showRemoveButton => (_$showRemoveButtonComputed ??=
           Computed<bool>(() => super.showRemoveButton))
       .value;
+  Computed<double> _$opacityCardComputed;
+
+  @override
+  double get opacityCard =>
+      (_$opacityCardComputed ??= Computed<double>(() => super.opacityCard))
+          .value;
 
   final _$timeWatchedAtom = Atom(name: '_HomeController.timeWatched');
 
@@ -181,7 +187,7 @@ mixin _$HomeController on _HomeController, Store {
   @override
   String toString() {
     final string =
-        'timeWatched: ${timeWatched.toString()},showGrid: ${showGrid.toString()},seasonNumbers: ${seasonNumbers.toString()},indexSeason: ${indexSeason.toString()},listContent: ${listContent.toString()},showRemoveButton: ${showRemoveButton.toString()}';
+        'timeWatched: ${timeWatched.toString()},showGrid: ${showGrid.toString()},seasonNumbers: ${seasonNumbers.toString()},indexSeason: ${indexSeason.toString()},listContent: ${listContent.toString()},showRemoveButton: ${showRemoveButton.toString()},opacityCard: ${opacityCard.toString()}';
     return '{$string}';
   }
 }
