@@ -80,10 +80,8 @@ class _HomeViewState extends State<HomeView> {
                               );
                             },
                             onSelectedItemChanged: (index) {
-                              
                               _controller.indexSeason = index;
-                              print(
-                                  "indexSeason: " + index.toString());
+                              print("indexSeason: " + index.toString());
                             },
                           ),
                         ),
@@ -152,16 +150,33 @@ class _HomeViewState extends State<HomeView> {
                             (context, index) {
                               print("item builder index: " + index.toString());
                               SerieModel model = _controller.listContent[index];
-                              return Stack(
-                                children: <Widget>[
-                                  Card(
-                                    elevation: 10,
-                                    child: SizedBox(
-                                      child: Image.network(model.posterPath),
+                              return Observer(builder: (context) {
+                                return Stack(
+                                  children: <Widget>[
+                                    Card(
+                                      elevation: 10,
+                                      child: SizedBox(
+                                        child: Image.network(model.posterPath),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
+                                    _controller.showRemoveButton
+                                        ? Positioned(
+                                            left: 73,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.remove_circle,
+                                                color: Colors.white,
+                                              ),
+                                              onPressed: () =>
+                                                  _controller.removeSerie(index),
+                                            ))
+                                        : GestureDetector(
+                                            onLongPress:
+                                                _controller.changeRemoveStatus,
+                                          ),
+                                  ],
+                                );
+                              });
                             },
                             childCount: _controller.listContent.length,
                           ),

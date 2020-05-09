@@ -9,6 +9,13 @@ part of 'home_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$HomeController on _HomeController, Store {
+  Computed<bool> _$showRemoveButtonComputed;
+
+  @override
+  bool get showRemoveButton => (_$showRemoveButtonComputed ??=
+          Computed<bool>(() => super.showRemoveButton))
+      .value;
+
   final _$timeWatchedAtom = Atom(name: '_HomeController.timeWatched');
 
   @override
@@ -41,6 +48,23 @@ mixin _$HomeController on _HomeController, Store {
       super.showGrid = value;
       _$showGridAtom.reportChanged();
     }, _$showGridAtom, name: '${_$showGridAtom.name}_set');
+  }
+
+  final _$_removeButtonAtom = Atom(name: '_HomeController._removeButton');
+
+  @override
+  bool get _removeButton {
+    _$_removeButtonAtom.context.enforceReadPolicy(_$_removeButtonAtom);
+    _$_removeButtonAtom.reportObserved();
+    return super._removeButton;
+  }
+
+  @override
+  set _removeButton(bool value) {
+    _$_removeButtonAtom.context.conditionallyRunInAction(() {
+      super._removeButton = value;
+      _$_removeButtonAtom.reportChanged();
+    }, _$_removeButtonAtom, name: '${_$_removeButtonAtom.name}_set');
   }
 
   final _$seasonNumbersAtom = Atom(name: '_HomeController.seasonNumbers');
@@ -135,9 +159,29 @@ mixin _$HomeController on _HomeController, Store {
   }
 
   @override
+  dynamic removeSerie(int index) {
+    final _$actionInfo = _$_HomeControllerActionController.startAction();
+    try {
+      return super.removeSerie(index);
+    } finally {
+      _$_HomeControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic changeRemoveStatus() {
+    final _$actionInfo = _$_HomeControllerActionController.startAction();
+    try {
+      return super.changeRemoveStatus();
+    } finally {
+      _$_HomeControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     final string =
-        'timeWatched: ${timeWatched.toString()},showGrid: ${showGrid.toString()},seasonNumbers: ${seasonNumbers.toString()},indexSeason: ${indexSeason.toString()},listContent: ${listContent.toString()}';
+        'timeWatched: ${timeWatched.toString()},showGrid: ${showGrid.toString()},seasonNumbers: ${seasonNumbers.toString()},indexSeason: ${indexSeason.toString()},listContent: ${listContent.toString()},showRemoveButton: ${showRemoveButton.toString()}';
     return '{$string}';
   }
 }

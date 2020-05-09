@@ -1,5 +1,6 @@
 import 'package:busy_time/models/serie_model.dart';
 import 'package:busy_time/repositories/serie_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 part 'home_controller.g.dart';
 
@@ -22,6 +23,9 @@ abstract class _HomeController with Store {
 
   @observable
   bool showGrid = true;
+
+  @observable
+  bool _removeButton = false;
 
   @observable
   int seasonNumbers = 0;
@@ -81,4 +85,13 @@ abstract class _HomeController with Store {
     }
     showGrid = true;
   }
+
+  @action
+  removeSerie(int index) => listContent.removeAt(index);
+
+  @action
+  changeRemoveStatus() => _removeButton = !_removeButton;
+
+  @computed
+  bool get showRemoveButton => _removeButton;
 }
