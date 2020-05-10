@@ -165,13 +165,6 @@ class _HomeViewState extends State<HomeView> {
                                         ),
                                       ),
                                     ),
-                                    // DecoratedBox(
-                                    //     decoration: BoxDecoration(
-                                    //   color: Colors.black45,
-                                    // )),
-                                    // Card(
-                                    //     elevation: 10,
-                                    //     color: _controller.colorPoster),
                                     _controller.showRemoveButton
                                         ? Positioned(
                                             left: 73,
